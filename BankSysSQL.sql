@@ -21,3 +21,7 @@ UPDATE account SET balance = balance - 3 WHERE acc_no = 2;
 
 SELECT * FROM account;
 SELECT * FROM transaction;
+
+SELECT SQL_TEXT FROM V$SESSION INNER JOIN V$SQL
+ON (V$SESSION.SQL_ID = V$SQL.SQL_ID OR V$SQL.SQL_ID = V$SESSION.PREV_SQL_ID)
+WHERE SID = sys_context('userenv','SID');
