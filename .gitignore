@@ -54,3 +54,5 @@ dkms.conf
 # binary
 bin/
 .settings/
+*.classpath
+.classpath
