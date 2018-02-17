@@ -15,6 +15,7 @@ CREATE TABLE transaction(
 
 INSERT INTO account (customer_name, balance) VALUES ('Foo Foosen', 0); 
 INSERT INTO account (customer_name, balance) VALUES ('Bar Barsen', 10);
+INSERT INTO account (customer_name, balance) VALUES ('Ear Earsen', 1330);
 
 INSERT INTO transaction (acc_no, type, amount) VALUES (2, 'withdraw', 3);
 UPDATE account SET balance = balance - 3 WHERE acc_no = 2;
