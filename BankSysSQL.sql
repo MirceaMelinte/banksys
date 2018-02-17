@@ -11,6 +11,8 @@ CREATE TABLE transaction(
     amount DOUBLE PRECISION NOT NULL
 );
 
+-- raw test data
+
 INSERT INTO account (customer_name, balance) VALUES ('Foo Foosen', 0); 
 INSERT INTO account (customer_name, balance) VALUES ('Bar Barsen', 10);
 
