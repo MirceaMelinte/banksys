@@ -12,7 +12,8 @@ import common.IDataServer;
 import model.Account;
 import model.Transaction;
 
-public class DataServer extends UnicastRemoteObject implements IDataServer {
+public class DataServer extends UnicastRemoteObject 
+   implements IDataServer {
 	
 	private static final long serialVersionUID = 1L;
 	private static Connection connection;
@@ -29,6 +30,8 @@ public class DataServer extends UnicastRemoteObject implements IDataServer {
 			LocateRegistry.createRegistry(1099);
 			
 			Naming.rebind("dataServer", this);
+			
+			System.out.println("Data server is running");
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}
@@ -123,4 +126,11 @@ public class DataServer extends UnicastRemoteObject implements IDataServer {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void main(String[] args) throws RemoteException
+   {
+      DataServer d = new DataServer();
+      
+      d.begin();
+   }
 }
