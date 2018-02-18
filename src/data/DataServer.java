@@ -38,7 +38,7 @@ public class DataServer extends UnicastRemoteObject
 	}
 	
 	@Override
-	public void executeWithdraw(Transaction transaction) throws SQLException, RemoteException {
+	public boolean executeWithdraw(Transaction transaction) throws SQLException, RemoteException {
 		try {
 			PreparedStatement statement = 
 					DataServer.connection.prepareStatement("UPDATE account SET balance = balance - ? "
@@ -56,6 +56,7 @@ public class DataServer extends UnicastRemoteObject
 			System.out.println("[SUCCESS] Successful withdraw execution on account: " 
 									+ transaction.getAccount().getAccNo() 
 									+ ", " + transaction.getAccount().getCustName());
+			return true;
 		}
 		catch (SQLException e) {
 			System.out.println("[FAIL] Failed withdraw execution on account: " 
@@ -63,10 +64,11 @@ public class DataServer extends UnicastRemoteObject
 					+ ", " + transaction.getAccount().getCustName());
 			e.printStackTrace();
 		}
+		return false;
 	}
 
 	@Override
-	public void executeDeposit(Transaction transaction) throws SQLException, RemoteException {
+	public boolean executeDeposit(Transaction transaction) throws SQLException, RemoteException {
 		try {
 			PreparedStatement statement = 
 					DataServer.connection.prepareStatement("UPDATE account SET balance = balance + ? "
@@ -84,6 +86,7 @@ public class DataServer extends UnicastRemoteObject
 			System.out.println("[SUCCESS] Successful deposit execution on account: " 
 					+ transaction.getAccount().getAccNo() 
 					+ ", " + transaction.getAccount().getCustName());
+			return true;
 		}
 		catch (SQLException e) {
 			System.out.println("[FAIL] Failed deposit execution on account: " 
@@ -91,6 +94,7 @@ public class DataServer extends UnicastRemoteObject
 					+ ", " + transaction.getAccount().getCustName());
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	private void insertTransaction(Transaction transaction) throws SQLException, RemoteException {
@@ -107,7 +111,7 @@ public class DataServer extends UnicastRemoteObject
 	}
 
 	@Override
-	public void executeNewAccount(Account account) throws SQLException, RemoteException {
+	public boolean executeNewAccount(Account account) throws SQLException, RemoteException {
 		try {
 			PreparedStatement statement = 
 					DataServer.connection.prepareStatement("INSERT INTO account (customer_name, balance) "
@@ -119,12 +123,15 @@ public class DataServer extends UnicastRemoteObject
 
 			statement.close();
 			
-			System.out.println("[SUCCESS] Successful execution of new account creation. Name: " + account.getCustName());
+			System.out.println("[SUCCESS] Successful execution of new account creation. Name: " 
+			      + account.getCustName());
+			return true;
 		}
 		catch (SQLException e) {
 			System.out.println("[FAIL] Failed execution of new account creation. Name: " + account.getCustName());
 			e.printStackTrace();
 		}
+		return false;
 	}
 	
 	public static void main(String[] args) throws RemoteException

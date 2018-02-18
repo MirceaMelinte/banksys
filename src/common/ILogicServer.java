@@ -9,9 +9,12 @@ import model.Transaction;
 
 public interface ILogicServer extends Remote
 {
-   void validateWithdraw(Transaction transaction) throws SQLException, RemoteException;
+   void validateWithdraw(Transaction transaction, IReply response) 
+         throws SQLException, RemoteException;
    
-   void validateDeposit(Transaction transaction) throws SQLException, RemoteException;
+   void validateDeposit(Transaction transaction, IReply response) 
+         throws SQLException, RemoteException;
 
-   void validateNewAccount(Account account) throws SQLException, RemoteException;
+   void validateNewAccount(Account account, IReply response) 
+         throws SQLException, RemoteException;
 }

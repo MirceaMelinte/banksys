@@ -2,18 +2,25 @@ package client;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 
 import model.Account;
 import model.Transaction;
 import common.ILogicServer;
+import common.IReply;
 
-public class ClerkClient
+public class ClerkClient extends UnicastRemoteObject implements IReply
 {
+   /**
+    * 
+    */
+   private static final long serialVersionUID = 1L;
    private ILogicServer logicServer;
    
-   public ClerkClient()
+   public ClerkClient() throws RemoteException
    {
+      super();
    }
    
    public void begin()
@@ -36,7 +43,7 @@ public class ClerkClient
       Account a = new Account(accNo, customerName);
       Transaction t = new Transaction("withdraw", a, amount);
       
-      logicServer.validateWithdraw(t);
+      logicServer.validateWithdraw(t, this);
    }
    
    public void deposit(int accNo, String customerName, double amount) 
@@ -45,7 +52,7 @@ public class ClerkClient
       Account a = new Account(accNo, customerName);
       Transaction t = new Transaction("deposit", a, amount);
       
-      logicServer.validateDeposit(t);
+      logicServer.validateDeposit(t, this);
    }  
    
    public static void main(String[] args) throws RemoteException, SQLException
@@ -56,5 +63,11 @@ public class ClerkClient
       
       c.withdraw(2, "Bar Barsen", 2);
       c.deposit(3, "Bo Brunsgaard", 150000);
+   }
+
+   @Override
+   public void replyMessage(String msg) throws RemoteException
+   {
+      System.out.println(msg);
    }
 }

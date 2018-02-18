@@ -10,8 +10,10 @@ import model.Account;
 import model.Transaction;
 import common.IDataServer;
 import common.ILogicServer;
+import common.IReply;
 
-public class LogicServer extends UnicastRemoteObject implements ILogicServer
+public class LogicServer extends UnicastRemoteObject 
+   implements ILogicServer
 {
    /**
     * 
@@ -43,10 +45,19 @@ public class LogicServer extends UnicastRemoteObject implements ILogicServer
    }
 
    @Override
-   public void validateWithdraw(Transaction transaction) throws SQLException,
-      RemoteException
+   public void validateWithdraw(Transaction transaction, IReply response) 
+         throws SQLException, RemoteException
    {
-         dataServer.executeWithdraw(transaction);
+         if(dataServer.executeWithdraw(transaction))
+         {
+            response.replyMessage("Withdrawal from the account: "
+                  + transaction.getAccount().getAccNo() + " was succesful");
+         }
+         else
+         {
+            response.replyMessage("Withdrawal from the account: "
+                  + transaction.getAccount().getAccNo() + " was unsuccesful");
+         }
    }
    
    public static void main(String[] args) throws RemoteException
@@ -57,18 +68,35 @@ public class LogicServer extends UnicastRemoteObject implements ILogicServer
    }
 
    @Override
-   public void validateDeposit(Transaction transaction) throws SQLException,
+   public void validateDeposit(Transaction transaction, IReply response) throws SQLException,
          RemoteException
    {
-      dataServer.executeDeposit(transaction);
-      
+      if(dataServer.executeDeposit(transaction))
+      {
+         response.replyMessage("Deposit from the account: "
+               + transaction.getAccount().getAccNo() + " was succesful");
+      }
+      else
+      {
+         response.replyMessage("Deposit from the account: "
+               + transaction.getAccount().getAccNo() + " was unsuccesful");
+      }
    }
 
    @Override
-   public void validateNewAccount(Account account) throws SQLException,
+   public void validateNewAccount(Account account, IReply response) throws SQLException,
          RemoteException
    {
-      dataServer.executeNewAccount(account);
+      if(dataServer.executeNewAccount(account))
+      {
+         response.replyMessage("Creating a new account for customer: "
+               + account.getCustName() + " was succesful");
+      }
+      else
+      {
+         response.replyMessage("Creating a new account for customer: "
+               + account.getCustName() + " was unsuccesful");
+      }
    }
 
    

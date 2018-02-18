@@ -8,9 +8,9 @@ import model.Account;
 import model.Transaction;
 
 public interface IDataServer extends Remote {
-	void executeWithdraw(Transaction transaction) throws SQLException, RemoteException;
+	boolean executeWithdraw(Transaction transaction) throws SQLException, RemoteException;
 
-	void executeDeposit(Transaction transaction) throws SQLException, RemoteException;
+	boolean executeDeposit(Transaction transaction) throws SQLException, RemoteException;
 
-	void executeNewAccount(Account account) throws SQLException, RemoteException;
+	boolean executeNewAccount(Account account) throws SQLException, RemoteException;
 }
