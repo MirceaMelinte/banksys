@@ -44,15 +44,6 @@ public class CustomerClient extends UnicastRemoteObject implements IReply
       
       logicServer.validateWithdraw(t, this);
    }
-   
-   public static void main(String[] args) throws RemoteException, SQLException
-   {
-      CustomerClient c = new CustomerClient();
-      
-      c.begin();
-      
-      c.withdraw(2, "Bar Barsen", 2);
-   }
 
    @Override
    public void replyMessage(String msg) throws RemoteException

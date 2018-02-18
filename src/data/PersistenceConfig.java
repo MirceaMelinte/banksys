@@ -7,14 +7,15 @@ import java.sql.SQLException;
 public class PersistenceConfig {
 	
 	final static String connectString = "jdbc:oracle:thin:@localhost:1521:orcl";
-	final static String userName = "mskn";
-	final static String password = "admin";
+	final static String userName = "mircea";
+	final static String password = "carlcarl";
 	
 	public static Connection establishConnection(Connection connection) {
 		try {
 			DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
 
 			connection = DriverManager.getConnection(connectString, userName, password);
+			connection.setAutoCommit(false);
 			
 			System.out.println("Connection to [" + connectString + "] successfully established. ");
 			

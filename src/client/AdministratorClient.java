@@ -11,9 +11,6 @@ import common.IReply;
 
 public class AdministratorClient extends UnicastRemoteObject implements IReply
 {
-   /**
-    * 
-    */
    private static final long serialVersionUID = 1L;
    private ILogicServer logicServer;
    
@@ -42,15 +39,6 @@ public class AdministratorClient extends UnicastRemoteObject implements IReply
       Account a = new Account(customerName, 0);
       
       logicServer.validateNewAccount(a, this);
-   }
-   
-   public static void main(String[] args) throws RemoteException, SQLException
-   {
-      AdministratorClient c = new AdministratorClient();
-      
-      c.begin();
-      
-      c.createAccount("Bo Brunsgaard");
    }
 
    @Override

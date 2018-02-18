@@ -15,9 +15,6 @@ import common.IReply;
 public class LogicServer extends UnicastRemoteObject 
    implements ILogicServer
 {
-   /**
-    * 
-    */
    private static final long serialVersionUID = 1L;
    private IDataServer dataServer;
    
@@ -45,59 +42,57 @@ public class LogicServer extends UnicastRemoteObject
    }
 
    @Override
-   public void validateWithdraw(Transaction transaction, IReply response) 
+   public synchronized void validateWithdraw(Transaction transaction, IReply response) 
          throws SQLException, RemoteException
    {
          if(dataServer.executeWithdraw(transaction))
          {
-            response.replyMessage("Withdrawal from the account: "
+            response.replyMessage("[SUCCESS] Withdrawal from the account: "
                   + transaction.getAccount().getAccNo() + " was succesful");
          }
          else
          {
-            response.replyMessage("Withdrawal from the account: "
+            response.replyMessage("[ERROR] Withdrawal from the account: "
                   + transaction.getAccount().getAccNo() + " was unsuccesful");
          }
    }
-   
+
+   @Override
+   public synchronized void validateDeposit(Transaction transaction, IReply response) throws SQLException,
+         RemoteException
+   {
+      if(dataServer.executeDeposit(transaction))
+      {
+         response.replyMessage("[SUCCESS] Deposit from the account: "
+               + transaction.getAccount().getAccNo() + " was succesful");
+      }
+      else
+      {
+         response.replyMessage("[ERROR] Deposit from the account: "
+               + transaction.getAccount().getAccNo() + " was unsuccesful");
+      }
+   }
+
+   @Override
+   public synchronized void validateNewAccount(Account account, IReply response) throws SQLException,
+         RemoteException
+   {
+      if(dataServer.executeNewAccount(account))
+      {
+         response.replyMessage("[SUCCESS] Creating a new account for customer: "
+               + account.getCustName() + " was succesful");
+      }
+      else
+      {
+         response.replyMessage("[ERROR] Creating a new account for customer: "
+               + account.getCustName() + " was unsuccesful");
+      }
+   }
+
    public static void main(String[] args) throws RemoteException
    {
       LogicServer l = new LogicServer();
       
       l.begin();
    }
-
-   @Override
-   public void validateDeposit(Transaction transaction, IReply response) throws SQLException,
-         RemoteException
-   {
-      if(dataServer.executeDeposit(transaction))
-      {
-         response.replyMessage("Deposit from the account: "
-               + transaction.getAccount().getAccNo() + " was succesful");
-      }
-      else
-      {
-         response.replyMessage("Deposit from the account: "
-               + transaction.getAccount().getAccNo() + " was unsuccesful");
-      }
-   }
-
-   @Override
-   public void validateNewAccount(Account account, IReply response) throws SQLException,
-         RemoteException
-   {
-      if(dataServer.executeNewAccount(account))
-      {
-         response.replyMessage("Creating a new account for customer: "
-               + account.getCustName() + " was succesful");
-      }
-      else
-      {
-         response.replyMessage("Creating a new account for customer: "
-               + account.getCustName() + " was unsuccesful");
-      }
-   }
-
-   
 }

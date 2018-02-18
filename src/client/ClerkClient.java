@@ -12,9 +12,6 @@ import common.IReply;
 
 public class ClerkClient extends UnicastRemoteObject implements IReply
 {
-   /**
-    * 
-    */
    private static final long serialVersionUID = 1L;
    private ILogicServer logicServer;
    
@@ -55,16 +52,6 @@ public class ClerkClient extends UnicastRemoteObject implements IReply
       logicServer.validateDeposit(t, this);
    }  
    
-   public static void main(String[] args) throws RemoteException, SQLException
-   {
-      ClerkClient c = new ClerkClient();
-      
-      c.begin();
-      
-      c.withdraw(2, "Bar Barsen", 2);
-      c.deposit(3, "Bo Brunsgaard", 150000);
-   }
-
    @Override
    public void replyMessage(String msg) throws RemoteException
    {
