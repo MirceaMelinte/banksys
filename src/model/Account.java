@@ -25,6 +25,12 @@ public class Account implements Serializable
       this.customerName = customerName;
    }
    
+   public Account(String customerName, double balance)
+   {
+      this.customerName = customerName;
+      this.balance = balance;
+   }
+   
    public int getAccNo()
    {
       return accNo;

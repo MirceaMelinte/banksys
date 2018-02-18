@@ -6,6 +6,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
 
+import model.Account;
 import model.Transaction;
 import common.IDataServer;
 import common.ILogicServer;
@@ -42,22 +43,10 @@ public class LogicServer extends UnicastRemoteObject implements ILogicServer
    }
 
    @Override
-   public void createWithdraw(Transaction transaction)
+   public void validateWithdraw(Transaction transaction) throws SQLException,
+      RemoteException
    {
-      try
-      {
          dataServer.executeWithdraw(transaction);
-      }
-      catch (RemoteException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-      catch (SQLException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
    }
    
    public static void main(String[] args) throws RemoteException
@@ -65,6 +54,21 @@ public class LogicServer extends UnicastRemoteObject implements ILogicServer
       LogicServer l = new LogicServer();
       
       l.begin();
+   }
+
+   @Override
+   public void validateDeposit(Transaction transaction) throws SQLException,
+         RemoteException
+   {
+      dataServer.executeDeposit(transaction);
+      
+   }
+
+   @Override
+   public void validateNewAccount(Account account) throws SQLException,
+         RemoteException
+   {
+      dataServer.executeNewAccount(account);
    }
 
    

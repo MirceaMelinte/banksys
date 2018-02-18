@@ -5,14 +5,13 @@ import java.rmi.RemoteException;
 import java.sql.SQLException;
 
 import model.Account;
-import model.Transaction;
 import common.ILogicServer;
 
-public class CustomerController
+public class AdministratorClient
 {
    private ILogicServer logicServer;
    
-   public CustomerController()
+   public AdministratorClient()
    {
    }
    
@@ -24,26 +23,26 @@ public class CustomerController
          
          logicServer = (ILogicServer) Naming.lookup( URL );
          
-         System.out.println("Client connection established");
+         System.out.println("Administrator Client connection established");
       } catch( Exception ex ) {
          ex.printStackTrace();
       }
    }
    
-   public void withdraw(int accNo, String customerName, double amount) throws RemoteException, SQLException
+   public void createAccount(String customerName) 
+         throws RemoteException, SQLException
    {
-      Account a = new Account(accNo, customerName);
-      Transaction t = new Transaction("withdraw", a, amount);
+      Account a = new Account(customerName, 0);
       
-      logicServer.createWithdraw(t);
+      logicServer.validateNewAccount(a);
    }
    
    public static void main(String[] args) throws RemoteException, SQLException
    {
-      CustomerController c = new CustomerController();
+      AdministratorClient c = new AdministratorClient();
       
       c.begin();
       
-      c.withdraw(2, "Bar Barsen", 2);
+      c.createAccount("Bo Brunsgaard");
    }
 }
