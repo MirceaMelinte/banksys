@@ -38,7 +38,7 @@ public class DataServer extends UnicastRemoteObject
 	}
 	
 	@Override
-	public synchronized boolean executeWithdraw(Transaction transaction) throws SQLException, RemoteException {
+	public boolean executeWithdraw(Transaction transaction) throws SQLException, RemoteException {
 		try {
 			PreparedStatement statement = 
 					DataServer.connection.prepareStatement("UPDATE account SET balance = balance - ? "
@@ -70,7 +70,7 @@ public class DataServer extends UnicastRemoteObject
 	}
 
 	@Override
-	public synchronized boolean executeDeposit(Transaction transaction) throws SQLException, RemoteException {
+	public boolean executeDeposit(Transaction transaction) throws SQLException, RemoteException {
 		try {
 			PreparedStatement statement = 
 					DataServer.connection.prepareStatement("UPDATE account SET balance = balance + ? "
@@ -101,7 +101,7 @@ public class DataServer extends UnicastRemoteObject
 		return false;
 	}
 	
-	private synchronized void insertTransaction(Transaction transaction) throws SQLException, RemoteException {
+	private void insertTransaction(Transaction transaction) throws SQLException, RemoteException {
 		PreparedStatement statement = 
 				DataServer.connection.prepareStatement("INSERT INTO transaction (acc_no, type, amount) "
 															+ "VALUES (?, ?, ?)");
@@ -116,7 +116,7 @@ public class DataServer extends UnicastRemoteObject
 	}
 
 	@Override
-	public synchronized boolean executeNewAccount(Account account) throws SQLException, RemoteException {
+	public boolean executeNewAccount(Account account) throws SQLException, RemoteException {
 		try {
 			PreparedStatement statement = 
 					DataServer.connection.prepareStatement("INSERT INTO account (customer_name, balance) "

@@ -7,7 +7,7 @@ import java.util.Scanner;
 import client.AdministratorClient;
 
 public class AdministratorView {
-	private synchronized static void run() throws RemoteException, SQLException {
+	private static void run() throws RemoteException, SQLException {
 		Scanner sc = new Scanner(System.in);
 		AdministratorClient admin = new AdministratorClient();
 		admin.begin();

@@ -7,7 +7,7 @@ import java.util.Scanner;
 import client.ClerkClient;
 
 public class ClerkView {
-	private synchronized static void run() throws RemoteException, SQLException {
+	private static void run() throws RemoteException, SQLException {
 		Scanner sc = new Scanner(System.in);
 		ClerkClient clerk = new ClerkClient();
 		clerk.begin();

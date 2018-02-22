@@ -8,7 +8,7 @@ import client.CustomerClient;
 
 public class CustomerView {
 	
-	private synchronized static void run() throws RemoteException, SQLException {
+	private static void run() throws RemoteException, SQLException {
 		Scanner sc = new Scanner(System.in);
 		CustomerClient customer = new CustomerClient();
 		

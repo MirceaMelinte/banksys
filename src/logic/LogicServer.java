@@ -42,7 +42,7 @@ public class LogicServer extends UnicastRemoteObject
    }
 
    @Override
-   public synchronized void validateWithdraw(Transaction transaction, IReply response) 
+   public void validateWithdraw(Transaction transaction, IReply response) 
          throws SQLException, RemoteException
    {
          if(dataServer.executeWithdraw(transaction))
@@ -58,7 +58,7 @@ public class LogicServer extends UnicastRemoteObject
    }
 
    @Override
-   public synchronized void validateDeposit(Transaction transaction, IReply response) throws SQLException,
+   public void validateDeposit(Transaction transaction, IReply response) throws SQLException,
          RemoteException
    {
       if(dataServer.executeDeposit(transaction))
@@ -74,7 +74,7 @@ public class LogicServer extends UnicastRemoteObject
    }
 
    @Override
-   public synchronized void validateNewAccount(Account account, IReply response) throws SQLException,
+   public void validateNewAccount(Account account, IReply response) throws SQLException,
          RemoteException
    {
       if(dataServer.executeNewAccount(account))
