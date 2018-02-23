@@ -5,22 +5,27 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import model.Account;
 import model.Transaction;
+
 import common.IDataServer;
 import common.ILogicServer;
-import common.IReply;
+import common.IObservable;
+import common.IObserver;
 
 public class LogicServer extends UnicastRemoteObject 
-   implements ILogicServer
+   implements ILogicServer, IObservable
 {
    private static final long serialVersionUID = 1L;
    private IDataServer dataServer;
+   private ArrayList<IObserver> observers;
    
    public LogicServer() throws RemoteException
    {
       super();
+      observers = new ArrayList<>();
    }
    
    public void begin() throws RemoteException
@@ -42,57 +47,87 @@ public class LogicServer extends UnicastRemoteObject
    }
 
    @Override
-   public void validateWithdraw(Transaction transaction, IReply response) 
+   public String validateWithdraw(Transaction transaction) 
          throws SQLException, RemoteException
    {
          if(dataServer.executeWithdraw(transaction))
          {
-            response.replyMessage("[SUCCESS] Withdrawal from the account: "
-                  + transaction.getAccount().getAccNo() + " was succesful");
+            this.notifyObservers(transaction);
+            
+            return "[SUCCESS] Withdrawal from the account: "
+                  + transaction.getAccount().getAccNo() + " was succesful";  
          }
          else
          {
-            response.replyMessage("[ERROR] Withdrawal from the account: "
-                  + transaction.getAccount().getAccNo() + " was unsuccesful");
+            return "[ERROR] Withdrawal from the account: "
+                  + transaction.getAccount().getAccNo() + " was unsuccesful";
          }
    }
 
    @Override
-   public void validateDeposit(Transaction transaction, IReply response) throws SQLException,
+   public String validateDeposit(Transaction transaction) throws SQLException,
          RemoteException
    {
       if(dataServer.executeDeposit(transaction))
       {
-         response.replyMessage("[SUCCESS] Deposit from the account: "
-               + transaction.getAccount().getAccNo() + " was succesful");
+         this.notifyObservers(transaction);
+         
+         return "[SUCCESS] Deposit from the account: "
+               + transaction.getAccount().getAccNo() + " was succesful";
       }
       else
       {
-         response.replyMessage("[ERROR] Deposit from the account: "
-               + transaction.getAccount().getAccNo() + " was unsuccesful");
+         return "[ERROR] Deposit from the account: "
+               + transaction.getAccount().getAccNo() + " was unsuccesful";
       }
    }
 
    @Override
-   public void validateNewAccount(Account account, IReply response) throws SQLException,
+   public String validateNewAccount(Account account) throws SQLException,
          RemoteException
    {
       if(dataServer.executeNewAccount(account))
       {
-         response.replyMessage("[SUCCESS] Creating a new account for customer: "
-               + account.getCustName() + " was succesful");
+         return "[SUCCESS] Creating a new account for customer: "
+               + account.getCustName() + " was succesful";
       }
       else
       {
-         response.replyMessage("[ERROR] Creating a new account for customer: "
-               + account.getCustName() + " was unsuccesful");
+         return "[ERROR] Creating a new account for customer: "
+               + account.getCustName() + " was unsuccesful";
       }
    }
 
+   @Override
+   public void attach(IObserver observer) throws RemoteException
+   {
+      observers.add(observer);
+   }
+
+   @Override
+   public void detach(IObserver observer) throws RemoteException
+   {
+      observers.remove(observer);
+   }
+   
+   private void notifyObservers(Transaction transaction)
+   {
+      for (IObserver observer : observers)
+      {
+         try
+         {
+            observer.update(transaction);
+         }
+         catch (RemoteException e)
+         {
+            e.printStackTrace();
+         }
+      }
+   }
+   
    public static void main(String[] args) throws RemoteException
    {
       LogicServer l = new LogicServer();
-      
       l.begin();
    }
 }

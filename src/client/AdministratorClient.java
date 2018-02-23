@@ -4,13 +4,18 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 import model.Account;
+import model.Transaction;
 import common.ILogicServer;
-import common.IReply;
+import common.IObserver;
 
-public class AdministratorClient extends UnicastRemoteObject implements IReply
+public class AdministratorClient extends UnicastRemoteObject implements IObserver
 {
+   /**
+    * 
+    */
    private static final long serialVersionUID = 1L;
    private ILogicServer logicServer;
    
@@ -26,6 +31,8 @@ public class AdministratorClient extends UnicastRemoteObject implements IReply
          String URL = "rmi://" + ip + "/" + "logicServer";
          
          logicServer = (ILogicServer) Naming.lookup( URL );
+        
+         logicServer.attach(this);
          
          System.out.println("Administrator Client connection established");
       } catch( Exception ex ) {
@@ -37,13 +44,18 @@ public class AdministratorClient extends UnicastRemoteObject implements IReply
          throws RemoteException, SQLException
    {
       Account a = new Account(customerName, 0);
+      String reply = logicServer.validateNewAccount(a);
       
-      logicServer.validateNewAccount(a, this);
+      System.out.println(reply);
    }
 
    @Override
-   public void replyMessage(String msg) throws RemoteException
+   public void update(Transaction transaction) throws RemoteException
    {
-      System.out.println(msg);
+      System.out.println("Transaction: " + transaction.getType() 
+            + ", Account no: " + transaction.getAccount().getAccNo()
+            + ", Customer name: " + transaction.getAccount().getCustName()
+            + ", Time: " + LocalDateTime.now());
+      transaction.toString();
    }
 }

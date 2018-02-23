@@ -7,14 +7,14 @@ import java.sql.SQLException;
 import model.Account;
 import model.Transaction;
 
-public interface ILogicServer extends Remote
+public interface ILogicServer extends Remote, IObservable
 {
-   void validateWithdraw(Transaction transaction, IReply response) 
+   String validateWithdraw(Transaction transaction) 
          throws SQLException, RemoteException;
    
-   void validateDeposit(Transaction transaction, IReply response) 
+   String validateDeposit(Transaction transaction) 
          throws SQLException, RemoteException;
 
-   void validateNewAccount(Account account, IReply response) 
+   String validateNewAccount(Account account) 
          throws SQLException, RemoteException;
 }
